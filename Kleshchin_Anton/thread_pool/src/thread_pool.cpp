@@ -6,7 +6,7 @@ ThreadPool::ThreadPool(size_t size) {
 }
 
 void ThreadPool::Enqueue(Func && task) {
-    task_queue.Put(std::move(task));
+    task_queue.Push(std::move(task));
 }
 
 ThreadPool::SThread::SThread(ThreadPool & pool)
@@ -25,14 +25,19 @@ void ThreadPool::SThread::operator()() noexcept {
         if (stop)
             return;
 
-        Func foo;
-        if (!pool.task_queue.Take(foo)) {
-            std::this_thread::yield();
-        } else {
-            (*foo)();
-            for (auto & conts : foo->continuations)
-                pool.task_queue.Put(move(conts));
-        }
+        pool.RunPendingTask();
     }
-    
+}
+
+void ThreadPool::RunPendingTask() noexcept {
+    Func foo;
+    if (!task_queue.TryPop(foo)) {
+        // Just let other threads/processes do work.
+        // Rewrite this line with conditional_variables if threads should sleep when task_queue is empty.
+        std::this_thread::yield();
+    } else {
+        (*foo)();
+        for (auto & conts : foo->continuations)
+            Enqueue(move(conts));
+    }
 }

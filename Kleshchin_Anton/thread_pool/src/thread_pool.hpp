@@ -26,4 +26,5 @@ public:
     ThreadPool(size_t size);
 
     void Enqueue(Func && task);
+    void RunPendingTask() noexcept;
 };
