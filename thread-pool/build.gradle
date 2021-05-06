@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+
+}
+
+apply plugin: 'idea'
+
+group 'org.example'
+version '1.0'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation(platform('org.junit:junit-bom:5.7.1'))
+    testImplementation('org.junit.jupiter:junit-jupiter')
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'ru.spbu.mm.Main',
+        )
+    }
+}
