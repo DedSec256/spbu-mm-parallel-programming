@@ -1,1 +1,0 @@
-/usr/bin/g++  -O3 -pthread   -O3 -DNDEBUG   CMakeFiles/task1.dir/main.cpp.o  -o task1 

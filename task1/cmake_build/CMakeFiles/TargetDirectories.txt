@@ -1,3 +1,0 @@
-/home/garrancha/tasks/spbu-mm-parallel-programming/task1/cmake_build/CMakeFiles/rebuild_cache.dir
-/home/garrancha/tasks/spbu-mm-parallel-programming/task1/cmake_build/CMakeFiles/edit_cache.dir
-/home/garrancha/tasks/spbu-mm-parallel-programming/task1/cmake_build/CMakeFiles/task1.dir
