@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/garrancha/tasks/spbu-mm-parallel-programming/task1/cmake_build",
+  "command": "/usr/bin/g++    -O3 -pthread   -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/task1.dir/main.cpp.o -c /home/garrancha/tasks/spbu-mm-parallel-programming/task1/main.cpp",
+  "file": "/home/garrancha/tasks/spbu-mm-parallel-programming/task1/main.cpp"
+}
+]
