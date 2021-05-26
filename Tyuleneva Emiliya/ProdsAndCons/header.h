@@ -66,7 +66,7 @@ protected:
     std::uniform_int_distribution<T> dist;
     std::mt19937 gen;
     std::thread myThread;
-    bool continue_ = true;
+    volatile bool continue_ = true;
 public:
     Worker(std::reference_wrapper<ThreadSafeQueue<T>> q,
            std::reference_wrapper<TestStruct<T>> test): qRef(q), testRef(test), gen(std::random_device{}()), dist(1, 2){}
