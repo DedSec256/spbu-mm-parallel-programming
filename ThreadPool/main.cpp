@@ -37,7 +37,7 @@ std::string AddSurroundBraces(std::string str) {
     return "[" + str + "]";
 }
 
-void checkThreadPoolWorkersAmountTest() {
+void CheckThreadPoolWorkersAmountTest() {
     const int workersNum = 10;
     ThreadPool threadPool(workersNum);
 
@@ -48,7 +48,7 @@ void checkThreadPoolWorkersAmountTest() {
     threadPool.Shutdown();
 }
 
-void singleTaskTest() {
+void SingleTaskTest() {
     const int workersNum = 10;
     const int fibN = 10;
     const int trueSum = 605;
@@ -62,7 +62,7 @@ void singleTaskTest() {
     threadPool.Shutdown();
 }
 
-void multipleTaskTest() {
+void MultipleTaskTest() {
     const int workersNum = 10;
     const int taskNum = 100;
     const int trueSum = 161700;
@@ -85,7 +85,7 @@ void multipleTaskTest() {
     threadPool.Shutdown();
 }
 
-void singleContinueWithTest() {
+void SingleContinueWithTest() {
     const int workersNum = 10;
     const int fibN = 10;
     const int trueSum = 605;
@@ -104,7 +104,7 @@ void singleContinueWithTest() {
     threadPool.Shutdown();
 }
 
-void multipleContinueWithTest() {
+void MultipleContinueWithTest() {
     const int workersNum = 10;
     const int fibN = 10;
     const int trueSum = 605;
@@ -115,21 +115,23 @@ void multipleContinueWithTest() {
 
     auto task = new Task<long, long>(FibSum, fibN);
     auto contTask = task->ContinueWith<std::string>(IntToStr);
+    auto yaContTask = task->ContinueWith<std::string>(IntToStr);
     auto contContTask = contTask->ContinueWith<std::string>(AddSurroundBraces);
 
     threadPool.Enqueue(task);
 
     assert(task->GetResult() == trueSum);
     assert(contTask->GetResult() == trueStr);
+    assert(yaContTask->GetResult() == trueStr);
     assert(contContTask->GetResult() == trueTrueStr);
 
     threadPool.Shutdown();
 }
 
 int main() {
-    checkThreadPoolWorkersAmountTest();
-    singleTaskTest();
-    multipleTaskTest();
-    singleContinueWithTest();
-    multipleContinueWithTest();
+    CheckThreadPoolWorkersAmountTest();
+    SingleTaskTest();
+    MultipleTaskTest();
+    SingleContinueWithTest();
+    MultipleContinueWithTest();
 }
