@@ -167,7 +167,7 @@ namespace ProducerConsumerTest
                         producer.Wait();
                     }
 
-                    CollectionAssert.AreEquivalent(expectedDestinationArray,consumerDestinationArray);
+                    CollectionAssert.AreEqual(expectedDestinationArray,consumerDestinationArray);
                 }
             }
         }
