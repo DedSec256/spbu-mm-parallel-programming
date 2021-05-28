@@ -19,3 +19,4 @@ List of tests:
 3. Multiple tasks submit (50 tasks, 5 thread by default)
 4. One continueWith call
 5. Multiple continueWith calls
+6. ThreadPool threads release during task execution
