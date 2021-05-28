@@ -11,6 +11,8 @@ public class GenericTask<TArg, TReturn> implements IMyTask<TArg, TReturn> {
     private final CountDownLatch countDown = new CountDownLatch(1);
     private ArgumentType argumentType;
     private GenericTask<?, TArg> precursor;
+    private GenericTask<TReturn, ?> descendant;
+    private GenericTask<?, ?> lastSubmitted;
 
     public void run() {
         if (this.argumentType == ArgumentType.DYNAMIC) {
@@ -22,12 +24,14 @@ public class GenericTask<TArg, TReturn> implements IMyTask<TArg, TReturn> {
     }
 
     public GenericTask(Function<TArg, TReturn> function, TArg argument) {
+        this.descendant = null;
         this.function = function;
         this.argument = argument;
         this.argumentType = ArgumentType.PREDEFINED;
     }
 
     public GenericTask(Function<TArg, TReturn> function, GenericTask<?, TArg> task) {
+        this.descendant = null;
         this.function = function;
         this.precursor = task;
         this.argumentType = ArgumentType.DYNAMIC;
@@ -47,8 +51,13 @@ public class GenericTask<TArg, TReturn> implements IMyTask<TArg, TReturn> {
         return this.result;
     }
 
-    public <TNewResult> GenericTask<TReturn, TNewResult> continueWith(Function<TReturn, TNewResult> func) {
-        GenericTask<TReturn, TNewResult> newTask = new GenericTask<>(func, this);
+    public <TResult, TNewResult> GenericTask<TResult, TNewResult> continueWith(Function<TResult, TNewResult> func) {
+        GenericTask curTask = this;
+        while (curTask.descendant != null) {
+            curTask = curTask.descendant;
+        }
+        GenericTask<TResult, TNewResult> newTask = new GenericTask<TResult, TNewResult>(func, curTask);
+        curTask.descendant = newTask;
         return newTask;
     }
 }

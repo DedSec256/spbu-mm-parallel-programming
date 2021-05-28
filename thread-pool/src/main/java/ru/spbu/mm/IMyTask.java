@@ -7,6 +7,6 @@ public interface IMyTask<TArg, TReturn> {
 
     public TReturn getResult() throws InterruptedException;
     public boolean getIsCompleted();
-    public <TNewResult> Object continueWith(Function<TReturn, TNewResult> func) throws InterruptedException;
+    public <TResult, TNewResult> GenericTask<TResult, TNewResult> continueWith(Function<TResult, TNewResult> func);
     public void run() throws InterruptedException;
 }

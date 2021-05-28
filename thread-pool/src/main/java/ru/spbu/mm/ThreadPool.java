@@ -3,6 +3,8 @@ package ru.spbu.mm;
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.locks.ReentrantLock;
+
 
 public class ThreadPool {
 
@@ -11,8 +13,13 @@ public class ThreadPool {
 
     private class WorkerThread extends Thread {
         IMyTask<?, ?> task;
-        private boolean busy = false;
+        private ReentrantLock safeToInterrupt;
         private BlockingQueue<IMyTask<?, ?>> taskQueue;
+        private volatile boolean workerInterrupt = false;
+
+        public WorkerThread() {
+            this.safeToInterrupt = new ReentrantLock();
+        }
 
         public void setTask(IMyTask<?, ?> task) {
             this.task = task;
@@ -21,11 +28,27 @@ public class ThreadPool {
             this.taskQueue = taskQueue;
         }
 
+        public void interruptWorker() {
+            this.workerInterrupt = true;
+            this.safeToInterrupt.lock();
+            try {
+                this.interrupt();
+            } finally {
+                this.safeToInterrupt.unlock();
+            }
+        }
+
         public void run() {
-            while (!this.isInterrupted()) {
+            while (!this.workerInterrupt) {
                 try {
                     IMyTask<?, ?> curTask = this.taskQueue.take();
-                    curTask.run();
+                    this.safeToInterrupt.lock();
+                    try {
+                        curTask.run();
+                    } finally {
+                        this.safeToInterrupt.unlock();
+                    }
+
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
@@ -44,7 +67,7 @@ public class ThreadPool {
         }
     }
 
-    private void findAssigneeAndSubmit(IMyTask<?, ?> task) {
+    private void putTask(IMyTask<?, ?> task) {
         try {
             this.taskQueue.put(task);
         } catch (InterruptedException e) {
@@ -52,16 +75,14 @@ public class ThreadPool {
         }
     }
 
-    void releaseThreads() {
-        for (Thread workerThread : this.workerThreads) {
-            workerThread.interrupt();
+    public void releaseThreads() {
+        for (WorkerThread workerThread : this.workerThreads) {
+            workerThread.interruptWorker();
         }
     }
 
     public void submit(IMyTask<?, ?> task) {
-        new Thread(() -> {
-            this.findAssigneeAndSubmit(task);
-        }).start();
+        this.putTask(task);
     }
 
     public Integer getNumberOfWorkingThreads() {
