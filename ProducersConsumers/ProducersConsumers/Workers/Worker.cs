@@ -37,8 +37,10 @@ namespace ProducersConsumers.Workers
 
         public void Stop()
         {
-            Interlocked.Exchange(ref _isActive, 0);
-            _thread.Join();
+            if (Interlocked.Exchange(ref _isActive, 0) == 1)
+            {
+                _thread.Join();
+            }
         }
     }
 }
