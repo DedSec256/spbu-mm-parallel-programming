@@ -7,7 +7,7 @@ namespace ProducersConsumers.Workers
     public abstract class Worker<T>
     {
         private readonly Thread _thread;
-        private int _isActive = 0;
+        private volatile int _isActive = 0;
 
         protected IProducerConsumerBuffer<T> Storage { get; }
 
