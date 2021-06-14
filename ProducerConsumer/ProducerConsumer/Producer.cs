@@ -14,35 +14,39 @@ namespace ProducerConsumer
         List<int> SharedData;
         bool Runnable = false;
         private const int pause = 1000;
+        private Locker lockFlag;
 
         public Producer(List<int> sharedData, Locker lockFlag)
         {
             this.SharedData = sharedData;
+            this.lockFlag = lockFlag;
             this.Runnable = true;
-            this.Thread = new Thread(() => Run(lockFlag));
+            this.Thread = new Thread(() => Run());
             this.Thread.Start();
         }
 
         public void Stop()
         {
+            this.lockFlag.Lock();
             this.Runnable = false;
+            this.lockFlag.Release();
             this.Thread.Join();
         }
 
-        public void Run(Locker lockFlag)
+        public void Run()
         {
             while (this.Runnable)
             {
-                lockFlag.Lock();
+                this.lockFlag.Lock();
                 // Stil running ? 
                 if (this.Runnable)
                 {
+                    Thread.Sleep(pause);
                     // push some value into shared data
                     this.SharedData.Add(24);
                     Console.WriteLine("Producer: added value 24");
                 }
-                lockFlag.Release();
-                Thread.Sleep(pause);
+                this.lockFlag.Release();
             }
 
         }
