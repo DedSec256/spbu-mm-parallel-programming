@@ -1,7 +1,7 @@
-*** Build
+## Build
 
-dotnet build
+    dotnet build
 
-*** Run tests
+## Run tests
 
-dotnet test
+    dotnet test
