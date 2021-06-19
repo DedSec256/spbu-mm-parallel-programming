@@ -4,13 +4,13 @@
 #include "src/ThreadPool.h"
 using namespace std;
 
-// 模拟任务1（Simulation task 1）
+// 模拟任务1(Задача моделирования 1)
 string Task1(string s) {
     this_thread::sleep_for(chrono::microseconds(1000));
     return s+s;
 }
 
-// 模拟任务2（Simulation task 2）
+// 模拟任务2(Задача моделирования 2)
 int Task2(int a, int n) {
     this_thread::sleep_for(chrono::microseconds(2000));
     if(a == 0) return 0;
@@ -26,34 +26,34 @@ int Task2(int a, int n) {
     return res;
 }
 
-// 模拟任务3（Simulation task 3）
+// 模拟任务3(Задача моделирования 3)
 int Task3(int a) {
     this_thread::sleep_for(chrono::microseconds(500));
     return a * a;
 }
 
-// 模拟任务4（Simulation task 4）
+// 模拟任务4(Задача моделирования 4)
 int Task4(int a, int b) {
     this_thread::sleep_for(chrono::microseconds(500));
     return a + b;
 }
 
-// 向线程池中只添加一个任务（Add only one task to the thread pool）
+// 向线程池中只添加一个任务(Добавить только одну задачу в пул потоков)
 void test_one_task(int thread_number) {
     try {
         cout << "############## test one task ############" << endl;
 
-        // 新建线程池对象（New thread pool object）
+        // 新建线程池对象(Новый объект пула потоков)
         shared_ptr<IDisposable> disposable(new ThreadPool(thread_number));
 
-        // 新建任务对象（New task object）
+        // 新建任务对象(Новый объект задачи)
         shared_ptr<IMyTask> task(new IMyTask());
 
-        // 添加任务（Add task）
+        // 添加任务(Добавить задачу)
         auto result = task->ContinueWith(Task1, "Hello world! ");
         disposable->Enqueue(task.get());
 
-        // 得到任务执行的结果（Get the result of the task execution）
+        // 得到任务执行的结果(Получите результат выполнения задачи)
         cout << "[info]: get task result : " << result.get() << endl;
         disposable->Dispose();
         cout << "############ end test one task ###########\n" << endl;
@@ -63,15 +63,15 @@ void test_one_task(int thread_number) {
     }
 }
 
-// 向线程池中添加多个任务（Add multiple tasks to the thread pool）
+// 向线程池中添加多个任务(Добавить несколько задач в пул потоков)
 void test_multi_task(int thread_number) {
     try {
         cout << "############## test multi task ############" << endl;
 
-        // 新建线程池对象（New thread pool object）
+        // 新建线程池对象(Новый объект пула потоков)
         shared_ptr<IDisposable> disposable(new ThreadPool(thread_number));
 
-        // 新建任务对象（New task object）
+        // 新建任务对象(Новый объект задачи)
         shared_ptr<IMyTask> task1(new IMyTask());
         auto result1 = task1->ContinueWith(Task1, "Hello world! ");
         disposable->Enqueue(task1.get());
@@ -102,21 +102,21 @@ void test_multi_task(int thread_number) {
     }
 }
 
-// 测试ContinueWith（Test ContinueWith）
+// 测试ContinueWith(Test ContinueWith)
 void test_task_ContinueWith(int thread_number) {
     try {
         cout << "############## test ContinueWith ############" << endl;
 
-        // 新建线程池对象（New thread pool object）
+        // 新建线程池对象(Новый объект пула потоков)
         shared_ptr<IDisposable> disposable(new ThreadPool(thread_number));
 
-        // 新建任务对象（New task object）
+        // 新建任务对象        // 新建任务对象(Новый объект задачи)
         shared_ptr<IMyTask> task(new IMyTask());
 
         auto result1 = task->ContinueWith(Task1, "Hello world! ");
         disposable->Enqueue(task.get());
-        // 必须在对result调用get()之后才可以对task继续调用ContinueWith设置新的任务（ must call get() on the result before you can continue to call ContinueWith on the task to set a new task）
-        // 因为只有在调用get()之后才可以确保上一个任务已经执行完毕，如果上一个任务没有执行完毕，则这里函数会阻塞（Because only after calling get() can it be ensured that the previous task has been executed. If the previous task has not been executed, this function will block）
+        // 必须在对result调用get()之后才可以对task继续调用ContinueWith设置新的任务(Вы должны вызвать get () для результата, прежде чем вы сможете продолжить вызов ContinueWith для задачи, чтобы установить новую задачу.)
+        // 因为只有在调用get()之后才可以确保上一个任务已经执行完毕，如果上一个任务没有执行完毕，则这里函数会阻塞(Потому что только после вызова get () можно убедиться, что предыдущая задача была выполнена. Если предыдущая задача не была выполнена, эта функция заблокирует)
         cout << "[info]: get Task1 result : " << result1.get() << endl;
 
         auto result2 = task->ContinueWith(Task2, 2, 20);

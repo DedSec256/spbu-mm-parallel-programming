@@ -1,0 +1,3 @@
+"C:\Program Files\JetBrains\CLion 2021.1.2\bin\cmake\win\bin\cmake.exe" -E rm -f CMakeFiles\hbk.dir/objects.a
+E:\Download\MinGW\bin\ar.exe cr CMakeFiles\hbk.dir/objects.a @CMakeFiles\hbk.dir\objects1.rsp
+E:\Download\MinGW\bin\g++.exe -g -Wl,--whole-archive CMakeFiles\hbk.dir/objects.a -Wl,--no-whole-archive -o hbk.exe -Wl,--out-implib,libhbk.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\hbk.dir\linklibs.rsp

@@ -17,9 +17,9 @@ using namespace std;
 
 class IDisposable{
 public:
-    // 添加任务
+    // 添加任务(Добавить задачу)
     virtual void Enqueue(IMyTask *task) = 0;
-    // 释放资源
+    // 释放资源(Освободить ресурсы)
     virtual void Dispose() = 0;
 protected:
     virtual ~IDisposable() {}
@@ -28,11 +28,11 @@ protected:
 class ThreadPool : public IDisposable{
 private:
 
-    vector<thread> threadPool;  // 线程池
-    queue<IMyTask*> taskQueue;      // 任务队列
-    int threadNum;              // 线程池中线程数量
+    vector<thread> threadPool;  // 线程池(Пул потоков)
+    queue<IMyTask*> taskQueue;      // 任务队列(Очередь задач)
+    int threadNum;              // 线程池中线程数量(Количество потоков в пуле потоков)
 
-    // 同步
+    // 同步(Синхронизировать)
     mutex mutexTask;
     condition_variable conditionVariableTask;
     mutex mutexIO;
@@ -44,16 +44,16 @@ public:
     explicit ThreadPool(int number);
     ~ThreadPool();
 
-    // 添加任务
+    // 添加任务(Добавить задачу)
     void Enqueue(IMyTask *task) override;
-    // 结束
+    // 结束(конец)
     void Dispose() override;
 
 private:
 
-    // 开启线程的运行
+    // 开启线程的运行(Начать выполнение потока)
     void start();
-    // 获取一个任务
+    // 获取一个任务(Получить задание)
     IMyTask* getOneTask();
 
 };
