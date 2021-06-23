@@ -7,44 +7,44 @@ using System.Threading;
 
 class Consumer
 {
-    Thread Thread;
-    List<int> SharedData;
-    volatile bool Runnable = false;
+    private Thread workerThread;
+    private List<int> sharedData;
+    volatile bool runnable = false;
     private const int pause = 2000;
     private Locker lockFlag;
 
     public Consumer(List<int> sharedData, Locker lockFlag)
     {
-        this.SharedData = sharedData;
+        this.sharedData = sharedData;
         this.lockFlag = lockFlag;
-        this.Runnable = true;
-        this.Thread = new Thread(() => Run());
-        this.Thread.Start();
+        this.runnable = true;
+        this.workerThread = new Thread(() => Run());
+        this.workerThread.Start();
     }
 
     public void Stop()
     {
-        this.Runnable = false;
-        this.Thread.Join();
+        this.runnable = false;
+        this.workerThread.Join();
     }
 
     public void Run()
     {
-        while (this.Runnable)
+        while (this.runnable)
         {
             this.lockFlag.Lock();
             // Stil running ?
-            if (this.Runnable)
+            if (this.runnable)
             {
                 Thread.Sleep(pause);
-                if (SharedData.Count == 0)
+                if (sharedData.Count == 0)
                 {
                     Console.WriteLine("Consumer: list is empty");
                 }
                 else
                 {
-                    int value = SharedData.Last();
-                    SharedData.Remove(value);
+                    int value = sharedData.Last();
+                    sharedData.Remove(value);
                     Console.WriteLine("Consumer: removed " + value + " from list");
                 }
             }

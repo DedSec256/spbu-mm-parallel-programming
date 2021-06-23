@@ -10,38 +10,38 @@ namespace ProducerConsumer
 
     class Producer
     {
-        Thread Thread;
-        List<int> SharedData;
-        volatile bool Runnable = false;
+        private Thread workerThread;
+        private List<int> sharedData;
+        volatile bool runnable = false;
         private const int pause = 1000;
         private Locker lockFlag;
 
         public Producer(List<int> sharedData, Locker lockFlag)
         {
-            this.SharedData = sharedData;
+            this.sharedData = sharedData;
             this.lockFlag = lockFlag;
-            this.Runnable = true;
-            this.Thread = new Thread(() => Run());
-            this.Thread.Start();
+            this.runnable = true;
+            this.workerThread = new Thread(() => Run());
+            this.workerThread.Start();
         }
 
         public void Stop()
         {
-            this.Runnable = false;
-            this.Thread.Join();
+            this.runnable = false;
+            this.workerThread.Join();
         }
 
         public void Run()
         {
-            while (this.Runnable)
+            while (this.runnable)
             {
                 this.lockFlag.Lock();
                 // Stil running ? 
-                if (this.Runnable)
+                if (this.runnable)
                 {
                     Thread.Sleep(pause);
                     // push some value into shared data
-                    this.SharedData.Add(24);
+                    this.sharedData.Add(24);
                     Console.WriteLine("Producer: added value 24");
                 }
                 this.lockFlag.Release();
@@ -50,5 +50,4 @@ namespace ProducerConsumer
         }
 
     }
-
 }
