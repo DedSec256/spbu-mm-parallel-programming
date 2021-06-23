@@ -9,7 +9,7 @@ class Consumer
 {
     Thread Thread;
     List<int> SharedData;
-    bool Runnable = false;
+    volatile bool Runnable = false;
     private const int pause = 2000;
     private Locker lockFlag;
 
@@ -24,9 +24,7 @@ class Consumer
 
     public void Stop()
     {
-        this.lockFlag.Lock(); 
         this.Runnable = false;
-        this.lockFlag.Release();
         this.Thread.Join();
     }
 

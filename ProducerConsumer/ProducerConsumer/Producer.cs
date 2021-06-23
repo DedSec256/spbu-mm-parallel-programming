@@ -12,7 +12,7 @@ namespace ProducerConsumer
     {
         Thread Thread;
         List<int> SharedData;
-        bool Runnable = false;
+        volatile bool Runnable = false;
         private const int pause = 1000;
         private Locker lockFlag;
 
@@ -27,9 +27,7 @@ namespace ProducerConsumer
 
         public void Stop()
         {
-            this.lockFlag.Lock();
             this.Runnable = false;
-            this.lockFlag.Release();
             this.Thread.Join();
         }
 
