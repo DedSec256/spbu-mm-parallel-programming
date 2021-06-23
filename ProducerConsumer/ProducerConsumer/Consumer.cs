@@ -9,7 +9,7 @@ class Consumer
 {
     private Thread workerThread;
     private List<int> sharedData;
-    volatile bool runnable = false;
+    private volatile bool runnable = false;
     private const int pause = 2000;
     private Locker lockFlag;
 

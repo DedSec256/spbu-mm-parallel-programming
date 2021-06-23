@@ -12,7 +12,7 @@ namespace ProducerConsumer
     {
         private Thread workerThread;
         private List<int> sharedData;
-        volatile bool runnable = false;
+        private volatile bool runnable = false;
         private const int pause = 1000;
         private Locker lockFlag;
 
